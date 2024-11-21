@@ -15,9 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const itemsPerPage = 4;
     let currentPage = 1;
 
-    let filteredProducts = [...productCards]; // Track filtered products for search
+    let filteredProducts = [...productCards];
 
-    // Function to dynamically create a product card
+    // Create product card
     function createProductCard(product) {
         const card = document.createElement("div");
         card.classList.add("product-card");
@@ -34,70 +34,61 @@ document.addEventListener("DOMContentLoaded", () => {
             </p>
         `;
         card.addEventListener("click", () => {
-            swapMainProduct(card, product);
+            updateMainProduct(product);
         });
         return card;
     }
 
-    // Function to update thumbnails dynamically
+    // Update the thumbnails
     function updateThumbnails(thumbnails) {
-        mainThumbnails.innerHTML = ""; // Clear existing thumbnails
+        mainThumbnails.innerHTML = ""; 
         thumbnails.forEach((thumbnail, index) => {
             const img = document.createElement("img");
             img.src = thumbnail;
             img.alt = `Thumbnail ${index + 1}`;
             img.classList.add(index === 0 ? "active-thumbnail" : "");
             img.addEventListener("click", () => {
-                mainImage.src = thumbnail; // Update main image
+                mainImage.src = thumbnail; 
                 document.querySelectorAll(".thumbnail-images img").forEach(img => img.classList.remove("active-thumbnail"));
-                img.classList.add("active-thumbnail"); // Highlight active thumbnail
+                img.classList.add("active-thumbnail");
             });
             mainThumbnails.appendChild(img);
         });
     }
 
-    // Function to swap the main product with a clicked product
-    function swapMainProduct(card, productDetails) {
-        const currentMainProduct = {
-            image: mainImage.src,
-            title: mainTitle.textContent,
-            originalPrice: mainPrice.querySelector(".original-price")?.textContent || "",
-            discountedPrice: mainPrice.textContent.replace(mainPrice.querySelector(".original-price")?.textContent || "", "").trim(),
-            subtitle: "Featured Product",
-            reviews: mainRating.innerHTML,
-            description: mainDescription.textContent,
-            thumbnails: Array.from(mainThumbnails.querySelectorAll("img")).map(img => img.src),
-        };
-
+    // Update the main product
+    function updateMainProduct(productDetails) {
         // Update main product details
         mainImage.src = productDetails.image;
         mainTitle.textContent = productDetails.title;
         mainPrice.innerHTML = `
             <span class="original-price">${productDetails.originalPrice}</span> ${productDetails.discountedPrice}
         `;
-        mainAvailability.textContent = "In Stock"; // Assuming all products are in stock
+        mainAvailability.textContent = "In Stock";
         mainRating.innerHTML = productDetails.reviews;
         mainDescription.textContent = productDetails.description;
 
         // Update thumbnails
         updateThumbnails(productDetails.thumbnails);
-
-        // Remove the clicked product card and re-add the previous main product card
-        const newCard = createProductCard(currentMainProduct);
-        bestsellerGrid.replaceChild(newCard, card);
-
-        // Update filtered products for pagination
-        filteredProducts = Array.from(bestsellerGrid.querySelectorAll(".product-card"));
-        showPage(); // Re-render the grid with pagination
     }
 
-    // Function to show products for the current page
+    // Initialize the grid for best products
+    function initializeProductGrid() {
+        bestsellerGrid.innerHTML = "";
+
+        const allProducts = [...filteredProducts];
+        allProducts.forEach(productCard => {
+            bestsellerGrid.appendChild(productCard);
+        });
+    }
+
+    // Display products for the main product section
     function showPage() {
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const visibleProducts = filteredProducts.slice(start, end);
 
-        bestsellerGrid.innerHTML = ""; // Clear the grid
+        bestsellerGrid.innerHTML = "";
         visibleProducts.forEach(card => {
             bestsellerGrid.appendChild(card);
         });
@@ -105,15 +96,12 @@ document.addEventListener("DOMContentLoaded", () => {
         renderPagination(filteredProducts.length);
     }
 
-    // Function to render pagination buttons
+    // Render pagination buttons
     function renderPagination(totalItems) {
         const totalPages = Math.ceil(totalItems / itemsPerPage);
+        paginationControls.innerHTML = "";
 
-        paginationControls.innerHTML = ""; // Clear previous pagination buttons
-
-        // No pagination needed if there’s only one page or no items
         if (totalPages <= 1) return;
-
         for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement("button");
             pageButton.textContent = i;
@@ -129,14 +117,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Function to handle search
+    // Initialize product search
     searchInput.addEventListener("input", (e) => {
         const searchText = e.target.value.toLowerCase();
         filteredProducts = productCards.filter(card =>
             card.querySelector(".product-title").textContent.toLowerCase().includes(searchText)
         );
-        currentPage = 1; // Reset to the first page
+        currentPage = 1;
         showPage();
+        renderPagination(filteredProducts.length);
     });
 
     // Initialize product cards with event listeners
@@ -152,11 +141,11 @@ document.addEventListener("DOMContentLoaded", () => {
             thumbnails: JSON.parse(card.dataset.thumbnails || '[]'),
         };
         card.addEventListener("click", () => {
-            swapMainProduct(card, productDetails);
+            updateMainProduct(productDetails);
         });
     });
 
-    // Initial rendering of products and pagination
+    // Initial render of products and pagination
     showPage();
     renderPagination(filteredProducts.length);
 });
