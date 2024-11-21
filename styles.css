@@ -1,4 +1,4 @@
-/* General Reset */
+/* Reset */
 * {
     margin: 0;
     padding: 0;
@@ -8,31 +8,65 @@
 
 body {
     line-height: 1.6;
-    background-color: #f4f4f4; /* Light background for contrast */
+    background-color: #f4f4f4;
 }
 
-/* Full-width Top Bar */
+/* Top Bar */
 .top-bar {
+    display: flex;
     width: 100%;
-    background-color: #2b9773; /* Green background */
+    background-color: #2b9773; 
     color: #fff;
     padding: 10px 20px;
     text-align: center;
+    justify-content: space-evenly;
 }
 
-/* Centered Content Container */
+.contact-info {
+    display: flex; 
+    align-items: center;
+    gap: 20px;
+}
+
+.contact-info span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.promo {
+    font-weight: bold;
+}
+
+.social-icons {
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    font-weight: bold;
+}
+
+.social-icons a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease; 
+}
+
+.social-icons a:hover {
+    color: #ffd700; 
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-/* Navigation and Breadcrumbs */
 .navigation, .breadcrumb, .product-detail, .bestseller-products {
     margin-bottom: 20px;
 }
 
-/* Search Bar Styling */
+/* Search Bar */
 .search-bar {
     width: 100%;
     padding: 10px;
@@ -94,7 +128,7 @@ body {
     right: -10px;
 }
 
-/* Breadcrumb Styling */
+/* Breadcrumb */
 .breadcrumb {
     background-color: #f8f8f8;
     padding: 10px 20px;
@@ -111,7 +145,7 @@ body {
     text-decoration: underline;
 }
 
-/* Product Detail Styling */
+/* Product Detail */
 .product-detail {
     display: flex;
     flex-wrap: wrap;
@@ -278,7 +312,7 @@ body {
     font-weight: bold;
 }
 
-/* Pagination Controls */
+/* Pagination */
 .pagination {
     display: flex;
     justify-content: center;
